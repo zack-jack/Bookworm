@@ -1,7 +1,17 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var session = require("express-session");
 var app = express();
+
+// Use sessions for tracking logins
+app.use(
+  session({
+    secret: "A9pxQDJfZ8tqMlJ8vtLkmMwnmDrNWltg",
+    resave: true,
+    saveUninitialized: false
+  })
+);
 
 // MongoDB connection
 mongoose.connect(
