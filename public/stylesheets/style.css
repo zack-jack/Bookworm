@@ -76,7 +76,9 @@ a:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 .btn-light:hover {
-  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  background-color: #31b0d5;
+  border-color: #2aabd2;
 }
 .active,
 .btn {
