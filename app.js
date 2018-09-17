@@ -2,22 +2,8 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var session = require("express-session");
+var MongoStore = require("connect-mongo")(session);
 var app = express();
-
-// Use sessions for tracking logins
-app.use(
-  session({
-    secret: "A9pxQDJfZ8tqMlJ8vtLkmMwnmDrNWltg",
-    resave: true,
-    saveUninitialized: false
-  })
-);
-
-// Make the user ID availabe to the templates
-app.use(function(req, res, next) {
-  res.locals.currentUser = req.session.userId;
-  next();
-});
 
 // MongoDB connection
 mongoose.connect(
@@ -27,6 +13,24 @@ mongoose.connect(
 var db = mongoose.connection;
 // Mongo error handling
 db.on("error", console.error.bind(console, "connection error:"));
+
+// Use sessions for tracking logins
+app.use(
+  session({
+    secret: "A9pxQDJfZ8tqMlJ8vtLkmMwnmDrNWltg",
+    resave: true,
+    saveUninitialized: false,
+    store: new MongoStore({
+      mongooseConnection: db
+    })
+  })
+);
+
+// Make the user ID availabe to the templates
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.session.userId;
+  next();
+});
 
 // parse incoming requests
 app.use(bodyParser.json());
